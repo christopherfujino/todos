@@ -23,14 +23,14 @@ class Todo {
 }
 
 class TodoWidget extends StatelessWidget {
-  TodoWidget(this.state, (int, int) indices, {required super.key}) : listsIndex = indices.$1, todoIndex = indices.$2;
+  TodoWidget((int, int) indices, {required super.key}) : listsIndex = indices.$1, todoIndex = indices.$2;
 
-  final InheritedState state;
   final int listsIndex;
   final int todoIndex;
 
   @override
   Widget build(BuildContext context) {
+    final state = InheritedState.of(context);
     final list = state.lists[listsIndex];
     final todo = list.todos[todoIndex];
     return Card(

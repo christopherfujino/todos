@@ -12,20 +12,15 @@ class TodoList {
   final List<Todo> todos;
 }
 
-class TodoListWidget extends StatefulWidget {
+class TodoListWidget extends StatelessWidget {
   const TodoListWidget(this.listsIndex, {Key? key}) : super(key: key);
 
   final int listsIndex;
 
   @override
-  State<TodoListWidget> createState() => _TodoListWidgetState();
-}
-
-class _TodoListWidgetState extends State<TodoListWidget> {
-  @override
   Widget build(BuildContext context) {
     final state = InheritedState.of(context);
-    final list = state.lists[widget.listsIndex];
+    final list = state.lists[listsIndex];
     return Center(
       child: SizedBox(
         width: 500,
@@ -36,8 +31,7 @@ class _TodoListWidgetState extends State<TodoListWidget> {
               child: ReorderableListView.builder(
                 itemCount: list.todos.length,
                 itemBuilder: (BuildContext ctx, int idx) => TodoWidget(
-                  state,
-                  (widget.listsIndex, idx),
+                  (listsIndex, idx),
                   key: Key('TodoWidget ${list.todos[idx].index}'),
                 ),
                 onReorder: (int oldIndex, int newIndex) {
@@ -47,14 +41,14 @@ class _TodoListWidgetState extends State<TodoListWidget> {
                   final oldTodos = list.todos;
                   final current = oldTodos.removeAt(oldIndex);
                   oldTodos.insert(newIndex, current);
-                  state.updateList(widget.listsIndex, list);
+                  state.updateList(listsIndex, list);
                 },
               ),
             ),
             const Divider(),
             ElevatedButton.icon(
               onPressed: () =>
-                  openTodoDialog(context, state, listsIndex: widget.listsIndex),
+                  openTodoDialog(context, state, listsIndex: listsIndex),
               label: const Text('New'),
               icon: const Icon(Icons.add),
             ),
