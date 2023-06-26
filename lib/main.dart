@@ -35,29 +35,33 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ListView.separated(
-          itemCount: state.todos.length,
-          itemBuilder: (BuildContext ctx, int idx) {
-            final todo = state.todos[idx];
-            return Card(
-              key: Key('TODO ${todo.index}'),
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                    title: Text(todo.title),
-                    subtitle: Text(todo.body),
-                  ),
-                  ElevatedButton.icon(
-                    onPressed: () => state.todos = state.todos..removeAt(idx),
-                    label: const Text('delete'),
-                    icon: const Icon(Icons.delete),
-                  ),
-                ],
-              ),
-            );
-          },
-          separatorBuilder: (_, __) => const Divider(),
-        ),
+        child: ReorderableListView.builder(
+            itemCount: state.todos.length,
+            itemBuilder: (BuildContext ctx, int idx) {
+              final todo = state.todos[idx];
+              return Card(
+                key: Key('TODO ${todo.index}'),
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      title: Text(todo.title),
+                      subtitle: Text(todo.body),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed: () => state.todos = state.todos..removeAt(idx),
+                      label: const Text('delete'),
+                      icon: const Icon(Icons.delete),
+                    ),
+                  ],
+                ),
+              );
+            },
+            onReorder: (int oldIndex, int newIndex) {
+              final oldTodos = state.todos;
+              final current = oldTodos.removeAt(oldIndex);
+              oldTodos.insert(newIndex, current);
+              state.todos = oldTodos;
+            }),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
