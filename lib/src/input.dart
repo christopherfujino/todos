@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'list.dart';
 import 'state.dart';
 import 'todo.dart';
 
 Future<void> openTodoDialog(
   BuildContext ctx,
   InheritedState state, {
-  int? previousIdx,
+  int? previousTodoIdx,
+  required int listsIndex,
 }) {
-  final Todo? previous = previousIdx == null ? null : state.todos[previousIdx];
+  final TodoList list = state.lists[listsIndex];
+  final Todo? previous = previousTodoIdx == null ? null : list.todos[previousTodoIdx];
   return showDialog<void>(
     builder: (BuildContext context) {
       String? title = previous?.title;
@@ -23,13 +26,12 @@ Future<void> openTodoDialog(
                 TextButton(
                   onPressed: () {
                     final nextTodo = Todo(title!, body!);
-                    if (previousIdx == null) {
-                      state.todos = state.todos..add(nextTodo);
+                    if (previousTodoIdx == null) {
+                      state.updateList(listsIndex, list..todos.add(nextTodo));
                     } else {
-                      final todos = state.todos;
-                      todos.removeAt(previousIdx);
-                      todos.insert(previousIdx, nextTodo);
-                      state.todos = todos;
+                      list.todos.removeAt(previousTodoIdx);
+                      list.todos.insert(previousTodoIdx, nextTodo);
+                      state.updateList(listsIndex, list);
                     }
                     Navigator.pop(context);
                   },

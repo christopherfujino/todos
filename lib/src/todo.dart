@@ -23,14 +23,16 @@ class Todo {
 }
 
 class TodoWidget extends StatelessWidget {
-  const TodoWidget(this.state, this.idx, {required super.key});
+  TodoWidget(this.state, (int, int) indices, {required super.key}) : listsIndex = indices.$1, todoIndex = indices.$2;
 
   final InheritedState state;
-  final int idx;
+  final int listsIndex;
+  final int todoIndex;
 
   @override
   Widget build(BuildContext context) {
-    final todo = state.todos[idx];
+    final list = state.lists[listsIndex];
+    final todo = list.todos[todoIndex];
     return Card(
       key: Key('TODO ${todo.index}'),
       child: Column(
@@ -42,12 +44,15 @@ class TodoWidget extends StatelessWidget {
           ButtonBar(
             children: <Widget>[
               ElevatedButton.icon(
-                onPressed: () => openTodoDialog(context, state, previousIdx: idx),
+                onPressed: () => openTodoDialog(context, state, listsIndex: listsIndex, previousTodoIdx: todoIndex),
                 label: const Text('edit'),
                 icon: const Icon(Icons.edit),
               ),
               ElevatedButton.icon(
-                onPressed: () => state.todos = state.todos..removeAt(idx),
+                onPressed: () {
+                  list.todos.removeAt(todoIndex);
+                  state.updateList(listsIndex, list);
+                },
                 label: const Text('delete'),
                 icon: const Icon(Icons.delete),
               ),

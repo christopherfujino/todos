@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'todo.dart';
+import 'list.dart';
 
 class StateWrapper extends StatefulWidget {
   const StateWrapper(this.child, {super.key});
@@ -12,13 +12,13 @@ class StateWrapper extends StatefulWidget {
 }
 
 class WrapperState extends State<StateWrapper> {
-  var todos = <Todo>[];
+  var lists = <TodoList>[TodoList(title: 'TODO')];
 
   @override
   Widget build(BuildContext context) {
     return InheritedState(
-      todos,
-      (List<Todo> newTodos) => setState(() => todos = newTodos),
+      lists,
+      (List<TodoList> newLists) => setState(() => lists = newLists),
       child: widget.child,
     );
   }
@@ -26,17 +26,22 @@ class WrapperState extends State<StateWrapper> {
 
 class InheritedState extends InheritedWidget {
   const InheritedState(
-    this._todos,
-    this._todoSetter, {
+    this._todoLists,
+    this._todoListsSetter, {
     super.key,
     required super.child,
   });
 
-  final List<Todo> _todos;
-  final void Function(List<Todo>) _todoSetter;
+  final List<TodoList> _todoLists;
+  final void Function(List<TodoList>) _todoListsSetter;
 
-  List<Todo> get todos => _todos;
-  set todos(List<Todo> todos) => _todoSetter(todos);
+  List<TodoList> get lists => _todoLists;
+  set lists(List<TodoList> todoLists) => _todoListsSetter(todoLists);
+
+  void updateList(int index, TodoList newList) {
+    _todoLists[index] = newList;
+    _todoListsSetter(_todoLists);
+  }
 
   @override
   bool updateShouldNotify(InheritedState oldWidget) => true;
