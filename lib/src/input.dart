@@ -17,7 +17,7 @@ Future<void> openTodoDialog(
         children: <Widget>[
           Column(
             children: <Widget>[
-              TextInput((String val) => title = val, initial: title),
+              TextInput((String val) => title = val, initial: title, autofocus: true),
               TextInput((String val) => body = val, initial: body),
               ButtonBar(children: <Widget>[
                 TextButton(
@@ -50,10 +50,11 @@ Future<void> openTodoDialog(
 }
 
 class TextInput extends StatefulWidget {
-  const TextInput(this.listener, {super.key, this.initial});
+  const TextInput(this.listener, {super.key, this.initial, this.autofocus = false});
 
   final void Function(String) listener;
   final String? initial;
+  final bool autofocus;
 
   @override
   _TitleState createState() => _TitleState();
@@ -73,7 +74,7 @@ class _TitleState extends State<TextInput> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(controller: _controller);
+    return TextFormField(controller: _controller, autofocus: widget.autofocus);
   }
 
   @override

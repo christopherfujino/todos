@@ -9,10 +9,11 @@ void main() {
       MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(primarySwatch: Colors.blue),
-        home: const TodoListWidget(title: 'TODOs'),
+        home: Scaffold(
+          appBar: AppBar(title: const Text('TODOs')),
+          body: const TodoListWidget(),
+        ),
       ),
     ),
   );
 }
-
-
