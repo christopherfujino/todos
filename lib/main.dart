@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 
+import 'src/state.dart';
+import 'src/todo.dart';
+
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+  runApp(
+    StateWrapper(
+      MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -29,57 +26,37 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class Todo {
-  Todo._(this.index, this.title, this.body);
-
-  factory Todo(String title, String body) {
-    return Todo._(
-      nextIndex++,
-      title,
-      body,
-    );
-  }
-
-  final String title;
-  final String body;
-  final int index;
-
-  static int nextIndex = 0;
-}
-
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Todo> _todos = <Todo>[];
-
   @override
   Widget build(BuildContext context) {
+    final state = InheritedState.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: _todos.map<Widget>((Todo todo) {
+        child: ListView.separated(
+          itemCount: state.todos.length,
+          itemBuilder: (BuildContext ctx, int idx) {
+            final todo = state.todos[idx];
             return Card(
               key: Key('TODO ${todo.index}'),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ListTile(
                     title: Text(todo.title),
                     subtitle: Text(todo.body),
                   ),
                   ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() => _todos.remove(todo));
-                    },
+                    onPressed: () => state.todos = state.todos..removeAt(idx),
                     label: const Text('delete'),
                     icon: const Icon(Icons.delete),
                   ),
                 ],
               ),
             );
-          }).toList(),
+          },
+          separatorBuilder: (_, __) => const Divider(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -97,9 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ButtonBar(children: <Widget>[
                         TextButton(
                           onPressed: () {
-                            setState(() {
-                              _todos.add(Todo(title!, body!));
-                            });
+                            state.todos = state.todos..add(Todo(title!, body!));
                             Navigator.pop(context);
                           },
                           child: const Text('Submit'),
@@ -119,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
