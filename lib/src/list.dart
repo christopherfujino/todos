@@ -48,8 +48,8 @@ class TodoListWidget extends StatelessWidget {
             const Divider(),
             ElevatedButton.icon(
               onPressed: () =>
-                  openTodoDialog(context, state, listsIndex: listsIndex),
-              label: const Text('New'),
+                  openTodoDialog(context, listsIndex: listsIndex),
+              label: const Text('New TODO'),
               icon: const Icon(Icons.add),
             ),
           ],

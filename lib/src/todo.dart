@@ -44,7 +44,7 @@ class TodoWidget extends StatelessWidget {
           ButtonBar(
             children: <Widget>[
               ElevatedButton.icon(
-                onPressed: () => openTodoDialog(context, state, listsIndex: listsIndex, previousTodoIdx: todoIndex),
+                onPressed: () => openTodoDialog(context, listsIndex: listsIndex, previousTodoIdx: todoIndex),
                 label: const Text('edit'),
                 icon: const Icon(Icons.edit),
               ),

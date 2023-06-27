@@ -20,10 +20,34 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final state = InheritedState.of(context);
+    final state = InheritedState.of(context);
     return Scaffold(
       appBar: AppBar(title: const Text('TODOs')),
-      body: const TodoListWidget(0),
+      body: ReorderableListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: state.lists.length,
+        itemBuilder: (BuildContext context, int index) {
+          return TodoListWidget(
+            index,
+            key: Key(
+              'TodoListWidget ${state.lists[index].title}',
+            ),
+          );
+        },
+        onReorder: (int oldIndex, int newIndex) {},
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _createNewList(context),
+        child: const Icon(Icons.add),
+      ),
     );
+  }
+
+  void _createNewList(BuildContext ctx) {
+    final state = InheritedState.of(ctx);
+    final oldLists = state.lists;
+    oldLists.add(TodoList(title: 'new!'));
+    state.lists = oldLists;
+    print('done: $oldLists');
   }
 }

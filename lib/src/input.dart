@@ -4,12 +4,16 @@ import 'list.dart';
 import 'state.dart';
 import 'todo.dart';
 
+Future<void> openNewListDialog({
+  required BuildContext ctx,
+}) {}
+
 Future<void> openTodoDialog(
-  BuildContext ctx,
-  InheritedState state, {
+  BuildContext ctx, {
   int? previousTodoIdx,
   required int listsIndex,
 }) {
+  final state = InheritedState.of(ctx);
   final TodoList list = state.lists[listsIndex];
   final Todo? previous = previousTodoIdx == null ? null : list.todos[previousTodoIdx];
   return showDialog<void>(
