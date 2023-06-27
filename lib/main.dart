@@ -30,6 +30,7 @@ class App extends StatelessWidget {
           return TodoListWidget(
             index,
             key: Key(
+              // TODO this is not guaranteed to be unique
               'TodoListWidget ${state.lists[index].title}',
             ),
           );
@@ -48,6 +49,5 @@ class App extends StatelessWidget {
     final oldLists = state.lists;
     oldLists.add(TodoList(title: 'new!'));
     state.lists = oldLists;
-    print('done: $oldLists');
   }
 }
